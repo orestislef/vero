@@ -140,6 +140,24 @@ class _AddRouteState extends State<AddRoute> {
   }
 
   void _onClickedOnAddRoute() {
+    if (_startLocation == null || _endLocation == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select start and end locations'),
+        ),
+      );
+      return;
+    }
+
+    if (_startDate == null || _endDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select start and end dates'),
+        ),
+      );
+      return;
+    }
+
     setState(() {
       _isLoading = true;
     });
