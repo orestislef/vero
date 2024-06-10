@@ -4,6 +4,7 @@ import 'package:vero/enums.dart';
 import 'package:vero/widgets/overview.dart';
 import 'package:vero/widgets/route_overview.dart';
 import 'package:vero/widgets/truck_overview.dart';
+import 'package:vero/widgets/users_overview.dart';
 
 import 'driver_overview.dart';
 
@@ -90,6 +91,16 @@ class _HomeState extends State<Home> {
           CustomNavigationBarItem(
             icon: const Icon(Icons.route_rounded),
           ),
+          CustomNavigationBarItem(
+            icon: const Badge(
+              backgroundColor: Colors.transparent,
+              label: Icon(
+                Icons.edit_outlined,
+                size: 15.0,
+              ),
+              child: Icon(Icons.person_rounded),
+            ),
+          ),
         ],
         currentIndex: _currentIndex,
         onTap: (index) {
@@ -112,6 +123,8 @@ class _HomeState extends State<Home> {
         return const TruckOverview();
       case 3:
         return const RouteOverview();
+      case 4:
+        return const UsersOverview();
       default:
         return Container();
     }

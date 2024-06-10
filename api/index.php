@@ -154,4 +154,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT' && isset($_GET['action']) && $_GET['acti
 	}
 }
 
+//USERS
+
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['action']) && $_GET['action'] == 'get_all_users') {
+	if (!isAuthenticated()) {
+        sendResponse(['status' => 'error', 'message' => 'Unauthorized']);
+    } else {
+		$input = json_decode(file_get_contents('php://input'), true);
+		$response = getAllUsers($pdo);
+		sendResponse($response);
+	}
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'PUT' && isset($_GET['action']) && $_GET['action'] == 'update_user') {
+	if (!isAuthenticated()) {
+        sendResponse(['status' => 'error', 'message' => 'Unauthorized']);
+    } else {
+		$input = json_decode(file_get_contents('php://input'), true);
+		$response = updateUser($pdo, $input);
+		sendResponse($response);
+	}
+}
+
 ?>

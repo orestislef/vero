@@ -1,4 +1,4 @@
-enum UserStatus { admin, driver, mod, unknown }
+enum UserStatus { admin, driver, mod }
 
 extension UserStatusExtension on UserStatus {
   static UserStatus fromString(String value) {
@@ -10,7 +10,7 @@ extension UserStatusExtension on UserStatus {
       case 'mod':
         return UserStatus.mod;
       default:
-        return UserStatus.unknown;
+        return UserStatus.driver;
     }
   }
 

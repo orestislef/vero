@@ -52,7 +52,9 @@ $tables = [
         current_location_json TEXT,
         status ENUM('available', 'on_route', 'off_duty') DEFAULT 'available',
         truck_id INT,
-        FOREIGN KEY (truck_id) REFERENCES trucks(id)
+		user_id INT,
+        FOREIGN KEY (truck_id) REFERENCES trucks(id),
+		FOREIGN KEY (user_id) REFERENCES users(id)
     )",
     
     // Create routes table    

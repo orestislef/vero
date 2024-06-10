@@ -206,6 +206,36 @@ class Api {
     return response;
   }
 
+  Future<http.Response> getAllUsers() async {
+    final response = await http.get(
+      Uri.parse(
+          'http://192.168.24.21:8080/vero/index.php?action=get_all_users'),
+      headers: _header(),
+    );
+
+    debugPrint(response.body.toString());
+    return response;
+  }
+
+  Future<http.Response> updateUser({
+    required int id,
+    required String username,
+    required String status,
+  }) async {
+    final response = await http.put(
+      Uri.parse('http://192.168.24.21:8080/vero/index.php?action=update_user'),
+      headers: _header(),
+      body: jsonEncode(<String, String>{
+        'id': id.toString(),
+        'username': username,
+        'status': status,
+      }),
+    );
+
+    debugPrint(response.body.toString());
+    return response;
+  }
+
   Future<http.Response> register(
       {required String username, required String password}) async {
     final response = await http.post(
