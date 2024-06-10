@@ -172,6 +172,7 @@ class _LoginRegisterState extends State<LoginRegister> {
     try {
       String status = jsonDecode(value.body)['status'].toString();
       String message = jsonDecode(value.body)['message'].toString();
+      String userStatus = jsonDecode(value.body)['user_status'].toString();
       if (value.statusCode == 200 &&
           Api().token != null &&
           Api().token!.isNotEmpty &&

@@ -30,6 +30,7 @@ $tables = [
 		username VARCHAR(255) NOT NULL UNIQUE,
 		password VARCHAR(255) NOT NULL,
 		token VARCHAR(255) NULL,
+		status ENUM('admin', 'mod','driver') DEFAULT 'driver',
 		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 	)",
 
@@ -63,9 +64,7 @@ $tables = [
         start_date TIMESTAMP NULL,
         end_date TIMESTAMP NULL,
         status ENUM('completed', 'pending','canceled') DEFAULT 'pending',
-        driver_id INT,
         truck_id INT,
-        FOREIGN KEY (driver_id) REFERENCES drivers(id),
         FOREIGN KEY (truck_id) REFERENCES trucks(id)
     )",
     

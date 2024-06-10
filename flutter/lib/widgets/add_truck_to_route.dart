@@ -93,14 +93,14 @@ class _AddTruckToRouteState extends State<AddTruckToRoute> {
                 onPressed: _isLoading
                     ? null
                     : () {
-                        onClickedOnAddRouteToTruck();
+                        onClickedOnAddTruckToRoute();
                       },
-                child: const Text('Add Route to Truck')),
+                child: const Text('Add Truck to Route')),
       ],
     );
   }
 
-  void onClickedOnAddRouteToTruck() {
+  void onClickedOnAddTruckToRoute() {
     setState(() {
       _isLoading = true;
     });

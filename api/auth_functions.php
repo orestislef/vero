@@ -11,7 +11,15 @@ function registerUser($pdo, $username, $password) {
         $token = generateToken();
         $stmt = $pdo->prepare('INSERT INTO users (username, password, token) VALUES (?, ?, ?)');
         if ($stmt->execute([$username, $hashedPassword, $token])) {
-            return ['status' => 'success', 'message' => 'User registered successfully', 'token' => $token];
+            // Get the user's status after successful registration
+            $userStmt = $pdo->prepare('SELECT status FROM users WHERE username = ?');
+            $userStmt->execute([$username]);
+            $user = $userStmt->fetch(PDO::FETCH_ASSOC);
+            if ($user) {
+                return ['status' => 'success', 'message' => 'User registered successfully', 'token' => $token, 'user_status' => $user['status']];
+            } else {
+                return ['status' => 'error', 'message' => 'Error retrieving user status after registration'];
+            }
         } else {
             return ['status' => 'error', 'message' => 'Error registering user'];
         }
@@ -19,6 +27,7 @@ function registerUser($pdo, $username, $password) {
         return ['status' => 'error', 'message' => 'Error registering user: ' . $e->getMessage()];
     }
 }
+
 
 function loginUser($pdo, $username, $password) {
     try {
@@ -30,7 +39,7 @@ function loginUser($pdo, $username, $password) {
             $token = generateToken();
             $updateStmt = $pdo->prepare('UPDATE users SET token = ? WHERE id = ?');
             $updateStmt->execute([$token, $user['id']]);
-            return ['status' => 'success', 'message' => 'Login successful', 'token' => $token];
+            return ['status' => 'success', 'message' => 'Login successful', 'token' => $token, 'user_status' => $user['status']];
         } else {
             return ['status' => 'error', 'message' => 'Invalid username or password'];
         }
@@ -39,14 +48,22 @@ function loginUser($pdo, $username, $password) {
     }
 }
 
+
+
 function authenticate($pdo, $token) {
     try {
         $stmt = $pdo->prepare('SELECT * FROM users WHERE token = ?');
         $stmt->execute([$token]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $user !== false;
+        
+        if ($user !== false && $user['status'] === 'admin') {
+            return true; // User is authenticated and has admin status
+        } else {
+            return false; // User not found or does not have admin status
+        }
     } catch (PDOException $e) {
-        return false;
+        return false; // Error occurred during authentication
     }
 }
+
 ?>
