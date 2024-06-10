@@ -273,7 +273,7 @@ function addRoute($pdo, $input)
 {
     $route_name = $input['route_name'] ?? '';
 	$start_location_string = $input['start_location_string'] ??'';
-	$end_location_string = $input['start_location_string'] ??'';
+	$end_location_string = $input['end_location_string'] ??'';
 	$start_date = $input['start_date'] ?? '';
 	$end_date = $input['end_date'] ?? '';
 
