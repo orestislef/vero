@@ -93,26 +93,36 @@ class _LoginRegisterState extends State<LoginRegister> {
   }
 
   void _checkLogin(Response value) {
-    String status = jsonDecode(value.body)['status'].toString();
-    String message = jsonDecode(value.body)['message'].toString();
-    if (value.statusCode == 200 &&
-        Api().token != null &&
-        Api().token!.isNotEmpty &&
-        status == 'success') {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-        ),
-      );
+    try {
+      String status = jsonDecode(value.body)['status'].toString();
+      String message = jsonDecode(value.body)['message'].toString();
+      if (value.statusCode == 200 &&
+          Api().token != null &&
+          Api().token!.isNotEmpty &&
+          status == 'success') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(message),
+          ),
+        );
 
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const Home()),
-        (Route<dynamic> route) => false,
-      );
-    } else {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const Home()),
+          (Route<dynamic> route) => false,
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(message),
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
+        const SnackBar(
+          content: Text('Something went wrong'),
         ),
       );
     }
