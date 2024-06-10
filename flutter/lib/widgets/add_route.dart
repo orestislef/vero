@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:vero/helpers/lat_lng_helper.dart';
 
 import '../communication/api.dart';
 import 'choose_from_map.dart';
@@ -17,6 +19,8 @@ class _AddRouteState extends State<AddRoute> {
   final TextEditingController _routeNameController = TextEditingController();
   DateTime? _startDate;
   DateTime? _endDate;
+  LatLng? _startLocation;
+  LatLng? _endLocation;
   bool _isLoading = false;
 
   @override
@@ -43,13 +47,22 @@ class _AddRouteState extends State<AddRoute> {
               children: [
                 Column(
                   children: [
-                    const Text('Start location:'),
+                    Text(_startLocation == null
+                        ? 'Start location'
+                        : 'Selected(start):'),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.3,
                       width: MediaQuery.of(context).size.width * 0.4,
                       child: Stack(
                         children: [
-                          ChooseFromMap(isStart: true, onSelected: (value) {}),
+                          ChooseFromMap(
+                              initial: _startLocation,
+                              isStart: true,
+                              onSelected: (value) {
+                                setState(() {
+                                  _startLocation = value;
+                                });
+                              }),
                           const Center(
                             child: Icon(
                               Icons.location_searching_outlined,
@@ -64,13 +77,22 @@ class _AddRouteState extends State<AddRoute> {
                 const SizedBox(height: 20),
                 Column(
                   children: [
-                    const Text('End location:'),
+                    Text(_endLocation == null
+                        ? 'End location'
+                        : 'Selected(end):'),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.3,
                       width: MediaQuery.of(context).size.width * 0.4,
                       child: Stack(
                         children: [
-                          ChooseFromMap(isStart: false, onSelected: (value) {}),
+                          ChooseFromMap(
+                              initial: _endLocation,
+                              isStart: false,
+                              onSelected: (value) {
+                                setState(() {
+                                  _endLocation = value;
+                                });
+                              }),
                           const Center(
                             child: Icon(
                               Icons.location_searching_outlined,
@@ -118,22 +140,40 @@ class _AddRouteState extends State<AddRoute> {
   }
 
   void _onClickedOnAddRoute() {
+    if (_startLocation == null || _endLocation == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select start and end locations'),
+        ),
+      );
+      return;
+    }
+
+    if (_startDate == null || _endDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select start and end dates'),
+        ),
+      );
+      return;
+    }
+
     setState(() {
       _isLoading = true;
-      Api()
-          .addRoute(
-            routeName: _routeNameController.text,
-            startLocationString: 'latitude: 0 longitude: 0',
-            endLocationString: 'latitude: 0 longitude: 0',
-            startDate: _startDate!,
-            endDate: _endDate!,
-          )
-          .then((response) => ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(jsonDecode(response.body)['message'])),
-              ));
-      setState(() {
-        _isLoading = false;
-      });
+    });
+    Api()
+        .addRoute(
+          routeName: _routeNameController.text,
+          startLocationString: LatLngHelper.latLngToJson(_startLocation!),
+          endLocationString: LatLngHelper.latLngToJson(_endLocation!),
+          startDate: _startDate!,
+          endDate: _endDate!,
+        )
+        .then((response) => ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(jsonDecode(response.body)['message'])),
+            ));
+    setState(() {
+      _isLoading = false;
     });
   }
 

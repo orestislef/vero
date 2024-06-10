@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vero/widgets/home.dart';
+import 'package:vero/widgets/login_register.dart';
 
 void main() {
   runApp(const VeroApp());
@@ -15,7 +15,7 @@ class VeroApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Home(),
+      home: const LoginRegister(),
     );
   }
 }

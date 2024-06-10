@@ -1,27 +1,62 @@
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:vero/widgets/add_driver.dart';
+import 'package:vero/enums/user_status.dart';
 import 'package:vero/widgets/overview.dart';
 import 'package:vero/widgets/route_overview.dart';
 import 'package:vero/widgets/truck_overview.dart';
+import 'package:vero/widgets/users_overview.dart';
 
 import 'driver_overview.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  const Home({super.key, required this.userStatus});
+
+  final UserStatus userStatus;
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 100), () {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+              'Welcome ${UserStatusExtension.enumToString(widget.userStatus)}!'),
+        ),
+      );
+    });
+  }
+
   int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    switch (widget.userStatus) {
+      case UserStatus.admin:
+        return _buildAdminPanel();
+      case UserStatus.driver:
+        return _buildDriverPanel();
+      default:
+        return _buildDriverPanel();
+    }
+  }
+
+  Widget _buildAdminPanel() {
     return Scaffold(
       body: _buildBody(),
       bottomNavigationBar: _buildBottomNavigationBar(),
+    );
+  }
+
+  Widget _buildDriverPanel() {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(UserStatusExtension.enumToString(widget.userStatus)),
+      ),
     );
   }
 
@@ -55,6 +90,16 @@ class _HomeState extends State<Home> {
           CustomNavigationBarItem(
             icon: const Icon(Icons.route_rounded),
           ),
+          CustomNavigationBarItem(
+            icon: const Badge(
+              backgroundColor: Colors.transparent,
+              label: Icon(
+                Icons.edit_outlined,
+                size: 15.0,
+              ),
+              child: Icon(Icons.person_rounded),
+            ),
+          ),
         ],
         currentIndex: _currentIndex,
         onTap: (index) {
@@ -77,6 +122,8 @@ class _HomeState extends State<Home> {
         return const TruckOverview();
       case 3:
         return const RouteOverview();
+      case 4:
+        return const UsersOverview();
       default:
         return Container();
     }

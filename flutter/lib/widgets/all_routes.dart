@@ -36,7 +36,7 @@ class _AllRoutesState extends State<AllRoutes> {
           );
         } else if (snapshot.hasData) {
           var routeResponse =
-          rt.RoutesResponse.fromJson(jsonDecode(snapshot.data!.body));
+              rt.RoutesResponse.fromJson(jsonDecode(snapshot.data!.body));
           return routeResponse.routes.isEmpty
               ? const Center(child: Text('No routes'))
               : Scrollbar(
@@ -62,8 +62,9 @@ class _AllRoutesState extends State<AllRoutes> {
                             ? const Icon(Icons.chevron_right)
                             : null,
                         title: Text(routeResponse.routes[index].routeName),
-                        subtitle: Text(
-                            routeResponse.routes[index].startLocationString),
+                        subtitle: Text('${routeResponse
+                                    .routes[index].startLocationString} - ${routeResponse.routes[index].endLocationString}' ??
+                            ''),
                         onTap: widget.onTap != null
                             ? () => widget.onTap!(routeResponse.routes[index])
                             : null,

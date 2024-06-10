@@ -25,6 +25,15 @@ $conn->select_db($dbName);
 
 // Create tables
 $tables = [
+	"CREATE TABLE users (
+		id INT AUTO_INCREMENT PRIMARY KEY,
+		username VARCHAR(255) NOT NULL UNIQUE,
+		password VARCHAR(255) NOT NULL,
+		token VARCHAR(255) NULL,
+		status ENUM('admin', 'driver') DEFAULT 'driver',
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	)",
+
     // Create trucks table
     "CREATE TABLE IF NOT EXISTS trucks (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -43,7 +52,9 @@ $tables = [
         current_location_json TEXT,
         status ENUM('available', 'on_route', 'off_duty') DEFAULT 'available',
         truck_id INT,
-        FOREIGN KEY (truck_id) REFERENCES trucks(id)
+		user_id INT,
+        FOREIGN KEY (truck_id) REFERENCES trucks(id),
+		FOREIGN KEY (user_id) REFERENCES users(id)
     )",
     
     // Create routes table    
@@ -55,9 +66,7 @@ $tables = [
         start_date TIMESTAMP NULL,
         end_date TIMESTAMP NULL,
         status ENUM('completed', 'pending','canceled') DEFAULT 'pending',
-        driver_id INT,
         truck_id INT,
-        FOREIGN KEY (driver_id) REFERENCES drivers(id),
         FOREIGN KEY (truck_id) REFERENCES trucks(id)
     )",
     

@@ -1,3 +1,5 @@
+import 'package:vero/enums/truck_status.dart';
+
 class TrucksResponse {
   late String message;
   late List<Truck> trucks;
@@ -17,12 +19,12 @@ class Truck {
   late int id;
   late String truckName;
   late String licensePlate;
-  late String status;
+  late TruckStatus status;
 
   Truck.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     truckName = json['truck_name'];
     licensePlate = json['license_plate'];
-    status = json['status'];
+    status = TruckStatusExtension.fromString(json['status']);
   }
 }
