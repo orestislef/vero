@@ -25,6 +25,14 @@ $conn->select_db($dbName);
 
 // Create tables
 $tables = [
+	"CREATE TABLE users (
+		id INT AUTO_INCREMENT PRIMARY KEY,
+		username VARCHAR(255) NOT NULL UNIQUE,
+		password VARCHAR(255) NOT NULL,
+		token VARCHAR(255) NULL,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	)",
+
     // Create trucks table
     "CREATE TABLE IF NOT EXISTS trucks (
         id INT AUTO_INCREMENT PRIMARY KEY,

@@ -15,6 +15,11 @@ class Api {
 
   static final Api _instance = Api._();
 
+  String? _token;
+
+
+  String? get token => _token;
+
   Future<http.Response> updateDriver({
     required int id,
     required String name,
@@ -35,7 +40,7 @@ class Api {
       Uri.parse(
           'http://192.168.24.21:8080/vero/index.php?action=update_driver'),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $_token',
       },
       body: jsonEncode(<String, String>{
         'id': id.toString(),
@@ -57,7 +62,7 @@ class Api {
     final response = await http.post(
       Uri.parse('http://192.168.24.21:8080/vero/index.php?action=add_driver'),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $_token',
       },
       body: jsonEncode(<String, String>{
         'name': name,
@@ -74,7 +79,7 @@ class Api {
     final response = await http.post(
       Uri.parse('http://192.168.24.21:8080/vero/index.php?action=add_truck'),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $_token',
       },
       body: jsonEncode(<String, String>{
         'truck_name': truckName,
@@ -88,6 +93,9 @@ class Api {
 
   Future<http.Response> getAllDrivers() async {
     final response = await http.get(
+      headers: <String, String>{
+        'Authorization': 'Bearer $_token',
+      },
       Uri.parse(
           'http://192.168.24.21:8080/vero/index.php?action=get_all_drivers'),
     );
@@ -98,6 +106,9 @@ class Api {
 
   Future<http.Response> getAllTrucks() async {
     final response = await http.get(
+      headers: <String, String>{
+        'Authorization': 'Bearer $_token',
+      },
       Uri.parse(
           'http://192.168.24.21:8080/vero/index.php?action=get_all_trucks'),
     );
@@ -114,7 +125,7 @@ class Api {
     final response = await http.put(
       Uri.parse('http://192.168.24.21:8080/vero/index.php?action=update_truck'),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $_token',
       },
       body: jsonEncode(<String, String>{
         'id': id.toString(),
@@ -132,7 +143,7 @@ class Api {
       Uri.parse(
           'http://192.168.24.21:8080/vero/index.php?action=assign_truck_to_driver'),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $_token',
       },
       body: jsonEncode(<String, String>{
         'driver_id': driverId.toString(),
@@ -146,6 +157,9 @@ class Api {
 
   Future<http.Response> getAllRoutes() async {
     final response = await http.get(
+      headers: <String, String>{
+        'Authorization': 'Bearer $_token',
+      },
       Uri.parse(
           'http://192.168.24.21:8080/vero/index.php?action=get_all_routes'),
     );
@@ -164,7 +178,7 @@ class Api {
     final response = await http.post(
       Uri.parse('http://192.168.24.21:8080/vero/index.php?action=add_route'),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $_token',
       },
       body: jsonEncode(<String, String>{
         'route_name': routeName,
@@ -174,6 +188,56 @@ class Api {
         'end_date': endDate.toIso8601String(),
       }),
     );
+
+    debugPrint(response.body.toString());
+    return response;
+  }
+
+  Future<http.Response> register(
+      {required String username, required String password}) async {
+    final response = await http.post(
+      Uri.parse('http://192.168.24.21:8080/vero/index.php?action=register'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $_token',
+      },
+      body: jsonEncode(<String, String>{
+        'username': username,
+        'password': password,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final token = jsonDecode(response.body)['token'];
+      if (token != null) {
+        _token = token;
+      }
+      debugPrint('Token: $token');
+    }
+
+    debugPrint(response.body.toString());
+    return response;
+  }
+
+  Future<http.Response> login(
+      {required String username, required String password}) async {
+    final response = await http.post(
+      Uri.parse('http://192.168.24.21:8080/vero/index.php?action=login'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $_token',
+      },
+      body: jsonEncode(<String, String>{
+        'username': username,
+        'password': password,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final token = jsonDecode(response.body)['token'];
+      if (token != null) {
+        _token = token;
+      }
+      debugPrint('Token: $token');
+    }
 
     debugPrint(response.body.toString());
     return response;
