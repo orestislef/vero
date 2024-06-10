@@ -27,8 +27,7 @@ function isAuthenticated($level) {
     $headers = apache_request_headers();
     if (!isset($headers['Authorization'])) {
         header('HTTP/1.0 401 Unauthorized');
-        echo 'Authentication required';
-        exit;
+        sendResponse(['status' => 'error', 'message' => 'Unauthorized']);
     }
 
     $token = str_replace('Bearer ', '', $headers['Authorization']);

@@ -24,6 +24,7 @@ class Api {
     return <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $_token',
+      'User-Agent': 'Android/1.0.0'
     };
   }
 
