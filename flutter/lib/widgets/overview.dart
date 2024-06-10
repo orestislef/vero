@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vero/widgets/drivers_in_map.dart';
+import 'package:vero/widgets/truck_statistics.dart';
 
 class Overview extends StatefulWidget {
   const Overview({super.key});
@@ -38,9 +39,25 @@ class _OverviewState extends State<Overview> {
   Widget _buildOverviewCard(int index) {
     switch (index) {
       case 0:
-        return const DriversInMap(isScaffold: false);
+        return Stack(children: [
+          const DriversInMap(isFullScreen: false),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: IconButton.filledTonal(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        const DriversInMap(isFullScreen: true),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.fullscreen_exit),
+            ),
+          )
+        ]);
       case 1:
-        return const SizedBox();
+        return const TruckStatistics();
       case 2:
         return const SizedBox();
       case 3:

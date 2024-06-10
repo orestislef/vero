@@ -11,9 +11,9 @@ import '../communication/models/drivers.dart';
 import '../enums/driver_status.dart';
 
 class DriversInMap extends StatefulWidget {
-  const DriversInMap({super.key, this.isScaffold = true});
+  const DriversInMap({super.key, this.isFullScreen = true});
 
-  final bool isScaffold;
+  final bool isFullScreen;
 
   @override
   State<DriversInMap> createState() => _DriversInMapState();
@@ -44,6 +44,7 @@ class _DriversInMapState extends State<DriversInMap> {
           ));
         }
         mapController.fitCamera(CameraFit.coordinates(
+            padding: const EdgeInsets.all(20.0),
             coordinates: markers.map((e) => e.point).toList()));
       });
     });
@@ -51,7 +52,7 @@ class _DriversInMapState extends State<DriversInMap> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.isScaffold ? _buildScaffold() : _buildColumn();
+    return widget.isFullScreen ? _buildScaffold() : _buildColumn();
   }
 
   Widget _buildScaffold() {
