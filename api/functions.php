@@ -307,6 +307,58 @@ function addRoute($pdo, $input)
     }
 }
 
+function updateRoute($pdo, $input){
+	$id = $input['id'] ?? '';
+    if (empty($id)) {
+        return sendResponse(['message' => 'Invalid input. required: route id'], 400);
+    }
+
+    // Check if the driver with the provided ID exists
+    $stmt = $pdo->prepare('SELECT id FROM routes WHERE id = ?');
+    $stmt->execute([$id]);
+    $routeExists = $stmt->fetchColumn();
+
+    if (!$routeExists) {
+        return sendResponse(['message' => 'Truck not found'], 404);
+    }
+
+    // Initialize arrays to store query parameters and update fields
+    $params = [];
+    $updateFields = [];
+
+    // Iterate through the input data and build the SQL query dynamically
+    foreach ($input as $key => $value) {
+        // Skip the 'id' field as it's used in the WHERE clause
+        if ($key === 'id') continue;
+
+        // Append the field to be updated and its corresponding value to the arrays
+        $updateFields[] = "$key = ?";
+        $params[] = $value;
+    }
+
+    // If no fields to update are provided, return an error
+    if (empty($updateFields)) {
+        return sendResponse(['message' => 'No fields to update'], 400);
+    }
+
+    try {
+        // Prepare and execute the SQL query
+        $sql = "UPDATE routes SET " . implode(", ", $updateFields) . " WHERE id = ?";
+        $params[] = $id; // Add the id parameter for the WHERE clause
+        $stmt = $pdo->prepare($sql);
+        $success = $stmt->execute($params);
+
+        if ($success) {
+            return sendResponse(['message' => 'Route updated successfully']);
+        } else {
+            return sendResponse(['message' => 'Failed to update route'], 500);
+        }
+    } catch (PDOException $e) {
+        // Print SQL query and detailed error message for debugging
+        return sendResponse(['message' => 'Failed to update route. Error: ' . $e->getMessage()], 500);
+    }
+}
+
 
 function sendResponse($data, $status_code = 200) {
     header('Content-Type: application/json');

@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:vero/communication/api.dart';
 import 'package:vero/communication/models/routes.dart' as rt;
 import 'package:vero/helpers/lat_lng_helper.dart';
 import 'package:vero/widgets/all_routes.dart';
@@ -14,6 +17,12 @@ class EditRoute extends StatefulWidget {
 }
 
 class _EditRouteState extends State<EditRoute> {
+  @override
+  void dispose() {
+    super.dispose();
+    _routeNameController.dispose();
+  }
+
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _routeNameController = TextEditingController();
   rt.Route? _route;
@@ -59,12 +68,14 @@ class _EditRouteState extends State<EditRoute> {
   }
 
   Widget _buildEdit() {
-    _routeNameController.text = _route!.routeName;
-    _startDate = _route!.startDate;
-    _endDate = _route!.endDate;
+    if (_routeNameController.text.isEmpty) {
+      _routeNameController.text = _route!.routeName;
+    }
+    _startDate ??= _route!.startDate;
+    _endDate ??= _route!.endDate;
 
-    _startLocation = LatLngHelper.jsonToLatLng(_route!.startLocationString);
-    _endLocation = LatLngHelper.jsonToLatLng(_route!.endLocationString!);
+    _startLocation ??= LatLngHelper.jsonToLatLng(_route!.startLocationString);
+    _endLocation ??= LatLngHelper.jsonToLatLng(_route!.endLocationString!);
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Form(
@@ -96,7 +107,11 @@ class _EditRouteState extends State<EditRoute> {
                           ChooseFromMap(
                               initial: _startLocation,
                               isStart: true,
-                              onSelected: (value) {}),
+                              onSelected: (value) {
+                                setState(() {
+                                  _startLocation = value;
+                                });
+                              }),
                           const Center(
                             child: Icon(
                               Icons.location_searching_outlined,
@@ -120,7 +135,11 @@ class _EditRouteState extends State<EditRoute> {
                           ChooseFromMap(
                               initial: _endLocation,
                               isStart: false,
-                              onSelected: (value) {}),
+                              onSelected: (value) {
+                                setState(() {
+                                  _endLocation = value;
+                                });
+                              }),
                           const Center(
                             child: Icon(
                               Icons.location_searching_outlined,
@@ -199,10 +218,20 @@ class _EditRouteState extends State<EditRoute> {
     setState(() {
       _isLoading = true;
     });
-    Future.delayed(const Duration(seconds: 2)).then((value) {
-      setState(() {
-        _isLoading = false;
-      });
+    Api()
+        .updateRoute(
+          id: _route!.id,
+          routeName: _routeNameController.text,
+          startLocationString: LatLngHelper.latLngToJson(_startLocation!),
+          endLocationString: LatLngHelper.latLngToJson(_endLocation!),
+          startDate: _startDate!,
+          endDate: _endDate!,
+        )
+        .then((response) => ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(jsonDecode(response.body)['message'])),
+            ));
+    setState(() {
+      _isLoading = false;
     });
   }
 }

@@ -181,6 +181,31 @@ class Api {
     return response;
   }
 
+  Future<http.Response> updateRoute({
+    required int id,
+    required String routeName,
+    required String startLocationString,
+    required String endLocationString,
+    required DateTime startDate,
+    required DateTime endDate,
+  }) async {
+    final response = await http.put(
+      Uri.parse('http://192.168.24.21:8080/vero/index.php?action=update_route'),
+      headers: _header(),
+      body: jsonEncode(<String, String>{
+        'id': id.toString(),
+        'route_name': routeName,
+        'start_location_string': startLocationString,
+        'end_location_string': endLocationString,
+        'start_date': startDate.toIso8601String(),
+        'end_date': endDate.toIso8601String(),
+      }),
+    );
+
+    debugPrint(response.body.toString());
+    return response;
+  }
+
   Future<http.Response> register(
       {required String username, required String password}) async {
     final response = await http.post(

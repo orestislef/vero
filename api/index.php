@@ -134,4 +134,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_GET['action']) && $_GET['act
 	}
 }
 
+if ($_SERVER['REQUEST_METHOD'] == 'PUT' && isset($_GET['action']) && $_GET['action'] == 'update_route') {
+	if (!isAuthenticated()) {
+        sendResponse(['status' => 'error', 'message' => 'Unauthorized']);
+    } else {
+		$input = json_decode(file_get_contents('php://input'), true);
+		$response = updateRoute($pdo, $input);
+		sendResponse($response);
+	}
+}
+
 ?>
