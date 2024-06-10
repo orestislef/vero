@@ -359,6 +359,10 @@ function updateRoute($pdo, $input){
     }
 }
 
+function assignTruckToRoute($pdo, $input){
+	
+}
+
 
 function sendResponse($data, $status_code = 200) {
     header('Content-Type: application/json');

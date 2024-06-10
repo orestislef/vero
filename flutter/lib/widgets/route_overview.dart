@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'add_route.dart';
-import 'add_route_to_truck.dart';
+import 'add_truck_to_route.dart';
 import 'all_routes.dart';
 import 'edit_route.dart';
 
@@ -24,23 +24,23 @@ class _RouteOverviewState extends State<RouteOverview> {
         _currentIndex == -1
             ? const SizedBox()
             : Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: ElevatedButton(
-            onPressed: () {
-              setState(() {
-                _currentIndex = -1;
-              });
-            },
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.adaptive.arrow_back_rounded),
-                const SizedBox(width: 10),
-                const Text('Back'),
-              ],
-            ),
-          ),
-        ),
+                padding: const EdgeInsets.all(10.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _currentIndex = -1;
+                    });
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.adaptive.arrow_back_rounded),
+                      const SizedBox(width: 10),
+                      const Text('Back'),
+                    ],
+                  ),
+                ),
+              ),
         _buildBody(),
       ],
     );
@@ -84,7 +84,7 @@ class _RouteOverviewState extends State<RouteOverview> {
             ),
             ListTile(
               leading: const Icon(Icons.local_shipping),
-              title: const Text('Assign Route to truck'),
+              title: const Text('Assign truck to Route'),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
                 setState(() {
@@ -101,7 +101,7 @@ class _RouteOverviewState extends State<RouteOverview> {
       case 2:
         return const EditRoute();
       case 3:
-        return const AddRouteToTruck();
+        return const AddTruckToRoute();
       default:
         return const Placeholder();
     }

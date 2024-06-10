@@ -144,4 +144,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT' && isset($_GET['action']) && $_GET['acti
 	}
 }
 
+if ($_SERVER['REQUEST_METHOD'] == 'PUT' && isset($_GET['action']) && $_GET['action'] == 'assign_truck_to_route') {
+	if (!isAuthenticated()) {
+        sendResponse(['status' => 'error', 'message' => 'Unauthorized']);
+    } else {
+		$input = json_decode(file_get_contents('php://input'), true);
+		$response = assignTruckToRoute($pdo, $input);
+		sendResponse($response);
+	}
+}
+
 ?>
