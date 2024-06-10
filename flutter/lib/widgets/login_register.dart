@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:vero/communication/api.dart';
+import 'package:vero/enums.dart';
 import 'package:vero/widgets/home.dart';
 
 class LoginRegister extends StatefulWidget {
@@ -184,7 +185,11 @@ class _LoginRegisterState extends State<LoginRegister> {
         );
 
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const Home()),
+          MaterialPageRoute(
+            builder: (context) => Home(
+              userStatus: UserStatusExtension.fromString(userStatus),
+            ),
+          ),
           (Route<dynamic> route) => false,
         );
       } else {
