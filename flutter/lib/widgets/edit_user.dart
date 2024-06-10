@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:vero/enums.dart';
+import 'package:vero/enums/user_status.dart';
 
 import '../communication/api.dart';
 import '../communication/models/users.dart';

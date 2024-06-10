@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:vero/communication/api.dart';
-import 'package:vero/enums.dart';
+import 'package:vero/enums/user_status.dart';
 
 import '../communication/models/users.dart';
 
@@ -76,7 +76,6 @@ class _AllUsersState extends State<AllUsers> {
 
   Color _getColor(User user) {
     switch (user.status) {
-      case UserStatus.mod:
       case UserStatus.admin:
         return Colors.green;
       case UserStatus.driver:

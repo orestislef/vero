@@ -30,7 +30,7 @@ $tables = [
 		username VARCHAR(255) NOT NULL UNIQUE,
 		password VARCHAR(255) NOT NULL,
 		token VARCHAR(255) NULL,
-		status ENUM('admin', 'mod','driver') DEFAULT 'driver',
+		status ENUM('admin', 'driver') DEFAULT 'driver',
 		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 	)",
 

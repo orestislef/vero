@@ -1,4 +1,4 @@
-import 'package:vero/enums.dart';
+import 'package:vero/enums/user_status.dart';
 
 class UsersResponse {
   final String message;

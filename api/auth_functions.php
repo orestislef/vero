@@ -50,16 +50,16 @@ function loginUser($pdo, $username, $password) {
 
 
 
-function authenticate($pdo, $token) {
+function authenticate($pdo, $token, $level) {
     try {
         $stmt = $pdo->prepare('SELECT * FROM users WHERE token = ?');
         $stmt->execute([$token]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        if ($user !== false && $user['status'] === 'admin') {
-            return true; // User is authenticated and has admin status
+        if ($user !== false && $user['status'] === $level) {
+            return true; // User is authenticated and has correct status
         } else {
-            return false; // User not found or does not have admin status
+            return false; // User not found or does not have correct status
         }
     } catch (PDOException $e) {
         return false; // Error occurred during authentication

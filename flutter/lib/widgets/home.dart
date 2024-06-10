@@ -1,6 +1,6 @@
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:vero/enums.dart';
+import 'package:vero/enums/user_status.dart';
 import 'package:vero/widgets/overview.dart';
 import 'package:vero/widgets/route_overview.dart';
 import 'package:vero/widgets/truck_overview.dart';
@@ -37,7 +37,6 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     switch (widget.userStatus) {
       case UserStatus.admin:
-      case UserStatus.mod:
         return _buildAdminPanel();
       case UserStatus.driver:
         return _buildDriverPanel();

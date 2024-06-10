@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_GET['action']) && $_GET['act
 }
 
 // Protect other endpoints with token authentication
-function isAuthenticated() {
+function isAuthenticated($level) {
     $headers = apache_request_headers();
     if (!isset($headers['Authorization'])) {
         header('HTTP/1.0 401 Unauthorized');
@@ -33,13 +33,13 @@ function isAuthenticated() {
 
     $token = str_replace('Bearer ', '', $headers['Authorization']);
     global $pdo;
-    return authenticate($pdo, $token);
+    return authenticate($pdo, $token, $level);
 }
 
 //DRIVERS
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['action']) && $_GET['action'] == 'get_all_drivers') {
-    if (!isAuthenticated()) {
+    if (!isAuthenticated('admin')) {
         sendResponse(['status' => 'error', 'message' => 'Unauthorized']);
     } else {
         $response = getAllDrivers($pdo);
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['action']) && $_GET['acti
 
 // Add a new driver
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_GET['action']) && $_GET['action'] == 'add_driver') {
-	if (!isAuthenticated()) {
+	if (!isAuthenticated('admin')) {
         sendResponse(['status' => 'error', 'message' => 'Unauthorized']);
     } else {
 		$input = json_decode(file_get_contents('php://input'), true);
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_GET['action']) && $_GET['act
 
 // Update driver information
 if ($_SERVER['REQUEST_METHOD'] == 'PUT' && isset($_GET['action']) && $_GET['action'] == 'update_driver') {
-	if (!isAuthenticated()) {
+	if (!isAuthenticated('admin')) {
         sendResponse(['status' => 'error', 'message' => 'Unauthorized']);
     } else {
 		$input = json_decode(file_get_contents('php://input'), true);
@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT' && isset($_GET['action']) && $_GET['acti
 
 // Add a new truck
 if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['action']) && $_GET['action'] == 'get_all_trucks') {
-    if (!isAuthenticated()) {
+    if (!isAuthenticated('admin')) {
         sendResponse(['status' => 'error', 'message' => 'Unauthorized']);
     } else {
 		$response = getAllTrucks($pdo);
@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['action']) && $_GET['acti
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_GET['action']) && $_GET['action'] == 'add_truck') {
-	if (!isAuthenticated()) {
+	if (!isAuthenticated('admin')) {
         sendResponse(['status' => 'error', 'message' => 'Unauthorized']);
     } else {
 		$input = json_decode(file_get_contents('php://input'), true);
@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_GET['action']) && $_GET['act
 
 // Update truck information
 if ($_SERVER['REQUEST_METHOD'] == 'PUT' && isset($_GET['action']) && $_GET['action'] == 'update_truck') {
-	if (!isAuthenticated()) {
+	if (!isAuthenticated('admin')) {
         sendResponse(['status' => 'error', 'message' => 'Unauthorized']);
     } else {
 		$input = json_decode(file_get_contents('php://input'), true);
@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT' && isset($_GET['action']) && $_GET['acti
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'PUT' && isset($_GET['action']) && $_GET['action'] == 'assign_truck_to_driver') {
-	if (!isAuthenticated()) {
+	if (!isAuthenticated('admin')) {
         sendResponse(['status' => 'error', 'message' => 'Unauthorized']);
     } else {
 		$input = json_decode(file_get_contents('php://input'), true);
@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT' && isset($_GET['action']) && $_GET['acti
 //ROUTES
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['action']) && $_GET['action'] == 'get_all_routes') {
-	if (!isAuthenticated()) {
+	if (!isAuthenticated('admin')) {
         sendResponse(['status' => 'error', 'message' => 'Unauthorized']);
     } else {
 		$input = json_decode(file_get_contents('php://input'), true);
@@ -125,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['action']) && $_GET['acti
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_GET['action']) && $_GET['action'] == 'add_route') {
-	if (!isAuthenticated()) {
+	if (!isAuthenticated('admin')) {
         sendResponse(['status' => 'error', 'message' => 'Unauthorized']);
     } else {
 		$input = json_decode(file_get_contents('php://input'), true);
@@ -135,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_GET['action']) && $_GET['act
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'PUT' && isset($_GET['action']) && $_GET['action'] == 'update_route') {
-	if (!isAuthenticated()) {
+	if (!isAuthenticated('admin')) {
         sendResponse(['status' => 'error', 'message' => 'Unauthorized']);
     } else {
 		$input = json_decode(file_get_contents('php://input'), true);
@@ -145,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT' && isset($_GET['action']) && $_GET['acti
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'PUT' && isset($_GET['action']) && $_GET['action'] == 'assign_truck_to_route') {
-	if (!isAuthenticated()) {
+	if (!isAuthenticated('admin')) {
         sendResponse(['status' => 'error', 'message' => 'Unauthorized']);
     } else {
 		$input = json_decode(file_get_contents('php://input'), true);
@@ -157,7 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT' && isset($_GET['action']) && $_GET['acti
 //USERS
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['action']) && $_GET['action'] == 'get_all_users') {
-	if (!isAuthenticated()) {
+	if (!isAuthenticated('admin')) {
         sendResponse(['status' => 'error', 'message' => 'Unauthorized']);
     } else {
 		$input = json_decode(file_get_contents('php://input'), true);
@@ -167,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['action']) && $_GET['acti
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'PUT' && isset($_GET['action']) && $_GET['action'] == 'update_user') {
-	if (!isAuthenticated()) {
+	if (!isAuthenticated('admin')) {
         sendResponse(['status' => 'error', 'message' => 'Unauthorized']);
     } else {
 		$input = json_decode(file_get_contents('php://input'), true);
