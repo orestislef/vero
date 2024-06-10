@@ -359,8 +359,47 @@ function updateRoute($pdo, $input){
     }
 }
 
-function assignTruckToRoute($pdo, $input){
-	
+function assignTruckToRoute($pdo, $input)
+{
+    $route_id = $input['route_id'] ?? '';
+    $truck_id = $input['truck_id'] ?? '';
+
+    // Check if required fields are provided
+    if (empty($route_id) || empty($truck_id)) {
+        return sendResponse(['message' => 'route_id and truck_id are required fields'], 400);
+    }
+
+    try {
+        // Check if the route exists
+        $stmt = $pdo->prepare('SELECT id FROM routes WHERE id = ?');
+        $stmt->execute([$route_id]);
+        $routeExists = $stmt->fetchColumn();
+
+        if (!$routeExists) {
+            return sendResponse(['message' => 'Route not found'], 404);
+        }
+
+        // Check if the truck exists
+        $stmt = $pdo->prepare('SELECT id FROM trucks WHERE id = ?');
+        $stmt->execute([$truck_id]);
+        $truckExists = $stmt->fetchColumn();
+
+        if (!$truckExists) {
+            return sendResponse(['message' => 'Truck not found'], 404);
+        }
+
+        // Assign the truck to the route (assuming there is a `truck_id` column in the routes table)
+        $stmt = $pdo->prepare('UPDATE routes SET truck_id = ? WHERE id = ?');
+        $success = $stmt->execute([$truck_id, $route_id]);
+
+        if ($success) {
+            return sendResponse(['message' => 'Truck assigned to driver successfully']);
+        } else {
+            return sendResponse(['message' => 'Failed to assign truck to route'], 500);
+        }
+    } catch (PDOException $e) {
+        return sendResponse(['message' => 'Error: ' . $e->getMessage()], 500);
+    }
 }
 
 function getAllUsers($pdo) {

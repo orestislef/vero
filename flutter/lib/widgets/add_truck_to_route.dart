@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:vero/communication/api.dart';
 import 'package:vero/communication/models/routes.dart' as rt;
 import 'package:vero/communication/models/trucks.dart';
 
@@ -104,10 +107,18 @@ class _AddTruckToRouteState extends State<AddTruckToRoute> {
     setState(() {
       _isLoading = true;
     });
-    Future.delayed(const Duration(seconds: 3), () {
+    Api()
+        .addTruckToRoute(routeId: _route!.id, truckId: _truck!.id)
+        .then((value) {
       setState(() {
         _isLoading = false;
       });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(jsonDecode(value.body)['message']),
+        ),
+      );
     });
   }
 }

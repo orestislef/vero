@@ -206,6 +206,22 @@ class Api {
     return response;
   }
 
+  Future<http.Response> addTruckToRoute(
+      {required int routeId, required int truckId}) async {
+    final response = await http.put(
+      Uri.parse(
+          'http://192.168.24.21:8080/vero/index.php?action=assign_truck_to_route'),
+      headers: _header(),
+      body: jsonEncode(<String, String>{
+        'route_id': routeId.toString(),
+        'truck_id': truckId.toString(),
+      }),
+    );
+
+    debugPrint(response.body.toString());
+    return response;
+  }
+
   Future<http.Response> getAllUsers() async {
     final response = await http.get(
       Uri.parse(
