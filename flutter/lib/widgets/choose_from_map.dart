@@ -5,8 +5,11 @@ import 'package:location/location.dart';
 import 'package:vero/helpers/location_helper.dart';
 
 class ChooseFromMap extends StatelessWidget {
-  const ChooseFromMap(
-      {super.key, required this.isStart, required this.onSelected});
+  const ChooseFromMap({
+    super.key,
+    required this.isStart,
+    required this.onSelected,
+  });
 
   final Function(LatLng) onSelected;
   final bool isStart;

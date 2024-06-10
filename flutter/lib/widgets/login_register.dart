@@ -15,19 +15,20 @@ class LoginRegister extends StatefulWidget {
 class _LoginRegisterState extends State<LoginRegister> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   void dispose() {
-    super.dispose();
     _usernameController.dispose();
     _passwordController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: (const Text('Login/Register')),
+        title: const Text('Login/Register'),
       ),
       body: _buildBody(),
     );
@@ -35,64 +36,139 @@ class _LoginRegisterState extends State<LoginRegister> {
 
   Widget _buildBody() {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          TextField(
-            controller: _usernameController,
-            decoration: const InputDecoration(labelText: 'Username'),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(50.0),
+        child: Card(
+          elevation: 10.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
           ),
-          TextField(
-            controller: _passwordController,
-            decoration: const InputDecoration(labelText: 'Password'),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  enabled: !_isLoading,
+                  controller: _usernameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Username',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  enabled: !_isLoading,
+                  controller: _passwordController,
+                  decoration: const InputDecoration(
+                    labelText: 'Password',
+                    border: OutlineInputBorder(),
+                  ),
+                  obscureText: true,
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        _onClickedOnForgotPassword();
+                      },
+                      child: const Text('Forgot Password?'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: _isLoading ? null : _onClickedOnLogin,
+                      child: _isLoading
+                          ? const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : const Text('Login'),
+                    ),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: _isLoading ? null : _onClickedOnRegister,
+                      child: _isLoading
+                          ? const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : const Text('Register'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              _onClickedOnLogin();
-            },
-            child: const Text('Login'),
-          ),
-          const SizedBox(height: 10),
-          ElevatedButton(
-            onPressed: () {
-              _onClickedOnRegister();
-            },
-            child: const Text('Register'),
-          ),
-        ],
+        ),
       ),
     );
   }
 
   void _onClickedOnLogin() {
     if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter username and password'),
+        ),
+      );
       return;
     }
 
-    debugPrint(_usernameController.text);
-    debugPrint(_passwordController.text);
+    setState(() {
+      _isLoading = true;
+    });
 
     Api()
         .login(
             username: _usernameController.text,
-            password: _passwordController.text)
+            password: _usernameController.text)
         .then((value) {
       _checkLogin(value);
     });
   }
 
   void _onClickedOnRegister() {
+    if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter username and password'),
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
     Api()
         .register(
             username: _usernameController.text,
-            password: _passwordController.text)
+            password: _usernameController.text)
         .then((value) {
       _checkLogin(value);
     });
   }
 
   void _checkLogin(Response value) {
+    setState(() {
+      _isLoading = false;
+    });
     try {
       String status = jsonDecode(value.body)['status'].toString();
       String message = jsonDecode(value.body)['message'].toString();
@@ -118,13 +194,27 @@ class _LoginRegisterState extends State<LoginRegister> {
         );
       }
     } catch (e) {
-      debugPrint(e.toString());
-
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Something went wrong'),
         ),
       );
     }
+  }
+
+  void _onClickedOnForgotPassword() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('OK'))
+              ],
+              title: const Text(
+                  'Contact Support\nForgot password is not yes implemented'),
+            ));
   }
 }
