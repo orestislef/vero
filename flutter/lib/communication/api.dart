@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
+import 'package:vero/enums/driver_status.dart';
 import 'package:vero/helpers/location_helper.dart';
 
 class Api {
@@ -30,6 +31,7 @@ class Api {
     required int id,
     required String name,
     required String phone,
+    required DriverStatus status,
   }) async {
     await LocationHelper().initializeService();
     LocationData location = await LocationHelper().getLocation();
@@ -53,7 +55,8 @@ class Api {
         'last_location_date': DateTime.now().toIso8601String(),
         'current_location_json':
             LocationHelper().locationToJsonString(location),
-        'current_location_string': locationString
+        'current_location_string': locationString,
+        'status': DriverStatusExtension.enumToString(status),
       }),
     );
 

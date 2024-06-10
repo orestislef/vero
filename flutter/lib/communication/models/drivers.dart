@@ -1,3 +1,5 @@
+import 'package:vero/enums/driver_status.dart';
+
 class DriversResponse {
   late String message;
   late List<Driver> drivers;
@@ -25,18 +27,17 @@ class Driver {
   String? lastLocationDate;
   String? currentLocationString;
   String? currentLocationJson;
-  late String status;
+  late DriverStatus status;
   int? truckId;
 
-  Driver(
-      {required this.id,
-      required this.name,
-      required this.phone,
-      this.lastLocationDate,
-      this.currentLocationString,
-      this.currentLocationJson,
-      required this.status,
-      this.truckId});
+  Driver({required this.id,
+    required this.name,
+    required this.phone,
+    this.lastLocationDate,
+    this.currentLocationString,
+    this.currentLocationJson,
+    required this.status,
+    this.truckId});
 
   factory Driver.fromJson(Map<String, dynamic> json) {
     return Driver(
@@ -46,7 +47,7 @@ class Driver {
         lastLocationDate: json['last_location_date'],
         currentLocationString: json['current_location_string'],
         currentLocationJson: json['current_location_json'],
-        status: json['status'],
+        status: DriverStatusExtension.fromString(json['status']),
         truckId: json['truck_id']);
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vero/widgets/drivers_in_map.dart';
 
 class Overview extends StatefulWidget {
   const Overview({super.key});
@@ -37,7 +38,7 @@ class _OverviewState extends State<Overview> {
   Widget _buildOverviewCard(int index) {
     switch (index) {
       case 0:
-        return const SizedBox();
+        return const DriversInMap(isScaffold: false);
       case 1:
         return const SizedBox();
       case 2:
