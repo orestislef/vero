@@ -7,6 +7,8 @@ import 'package:location/location.dart';
 import 'package:vero/enums/driver_status.dart';
 import 'package:vero/helpers/location_helper.dart';
 
+const String baseUrl = 'http://138.2.157.2/vero/';
+
 class Api {
   Api._();
 
@@ -46,8 +48,7 @@ class Api {
     }
 
     final response = await http.put(
-      Uri.parse(
-          'http://192.168.24.21:8080/vero/index.php?action=update_driver'),
+      Uri.parse('${baseUrl}index.php?action=update_driver'),
       headers: _header(),
       body: jsonEncode(<String, String>{
         'id': id.toString(),
@@ -68,7 +69,7 @@ class Api {
   Future<http.Response> addDriver(
       {required String name, required String phone}) async {
     final response = await http.post(
-      Uri.parse('http://192.168.24.21:8080/vero/index.php?action=add_driver'),
+      Uri.parse('${baseUrl}vero/index.php?action=add_driver'),
       headers: _header(),
       body: jsonEncode(<String, String>{
         'name': name,
@@ -83,7 +84,7 @@ class Api {
   Future<http.Response> addTruck(
       {required String truckName, required String licensePlate}) async {
     final response = await http.post(
-      Uri.parse('http://192.168.24.21:8080/vero/index.php?action=add_truck'),
+      Uri.parse('${baseUrl}vero/index.php?action=add_truck'),
       headers: _header(),
       body: jsonEncode(<String, String>{
         'truck_name': truckName,
@@ -97,8 +98,7 @@ class Api {
 
   Future<http.Response> getAllDrivers() async {
     final response = await http.get(
-      Uri.parse(
-          'http://192.168.24.21:8080/vero/index.php?action=get_all_drivers'),
+      Uri.parse('${baseUrl}index.php?action=get_all_drivers'),
       headers: _header(),
     );
 
@@ -108,8 +108,7 @@ class Api {
 
   Future<http.Response> getAllTrucks() async {
     final response = await http.get(
-      Uri.parse(
-          'http://192.168.24.21:8080/vero/index.php?action=get_all_trucks'),
+      Uri.parse('${baseUrl}index.php?action=get_all_trucks'),
       headers: _header(),
     );
 
@@ -123,7 +122,7 @@ class Api {
     required String licencePlate,
   }) async {
     final response = await http.put(
-      Uri.parse('http://192.168.24.21:8080/vero/index.php?action=update_truck'),
+      Uri.parse('${baseUrl}index.php?action=update_truck'),
       headers: _header(),
       body: jsonEncode(<String, String>{
         'id': id.toString(),
@@ -138,8 +137,7 @@ class Api {
   Future<http.Response> assignTruckToDriver(
       {required int driverId, required int truckId}) async {
     final response = await http.put(
-      Uri.parse(
-          'http://192.168.24.21:8080/vero/index.php?action=assign_truck_to_driver'),
+      Uri.parse('${baseUrl}index.php?action=assign_truck_to_driver'),
       headers: _header(),
       body: jsonEncode(<String, String>{
         'driver_id': driverId.toString(),
@@ -153,8 +151,7 @@ class Api {
 
   Future<http.Response> getAllRoutes() async {
     final response = await http.get(
-      Uri.parse(
-          'http://192.168.24.21:8080/vero/index.php?action=get_all_routes'),
+      Uri.parse('${baseUrl}index.php?action=get_all_routes'),
       headers: _header(),
     );
 
@@ -170,7 +167,7 @@ class Api {
     required DateTime endDate,
   }) async {
     final response = await http.post(
-      Uri.parse('http://192.168.24.21:8080/vero/index.php?action=add_route'),
+      Uri.parse('${baseUrl}index.php?action=add_route'),
       headers: _header(),
       body: jsonEncode(<String, String>{
         'route_name': routeName,
@@ -194,7 +191,7 @@ class Api {
     required DateTime endDate,
   }) async {
     final response = await http.put(
-      Uri.parse('http://192.168.24.21:8080/vero/index.php?action=update_route'),
+      Uri.parse('${baseUrl}index.php?action=update_route'),
       headers: _header(),
       body: jsonEncode(<String, String>{
         'id': id.toString(),
@@ -213,8 +210,7 @@ class Api {
   Future<http.Response> addTruckToRoute(
       {required int routeId, required int truckId}) async {
     final response = await http.put(
-      Uri.parse(
-          'http://192.168.24.21:8080/vero/index.php?action=assign_truck_to_route'),
+      Uri.parse('${baseUrl}index.php?action=assign_truck_to_route'),
       headers: _header(),
       body: jsonEncode(<String, String>{
         'route_id': routeId.toString(),
@@ -228,8 +224,7 @@ class Api {
 
   Future<http.Response> getAllUsers() async {
     final response = await http.get(
-      Uri.parse(
-          'http://192.168.24.21:8080/vero/index.php?action=get_all_users'),
+      Uri.parse('${baseUrl}index.php?action=get_all_users'),
       headers: _header(),
     );
 
@@ -243,7 +238,7 @@ class Api {
     required String status,
   }) async {
     final response = await http.put(
-      Uri.parse('http://192.168.24.21:8080/vero/index.php?action=update_user'),
+      Uri.parse('${baseUrl}index.php?action=update_user'),
       headers: _header(),
       body: jsonEncode(<String, String>{
         'id': id.toString(),
@@ -259,7 +254,7 @@ class Api {
   Future<http.Response> register(
       {required String username, required String password}) async {
     final response = await http.post(
-      Uri.parse('http://192.168.24.21:8080/vero/index.php?action=register'),
+      Uri.parse('${baseUrl}index.php?action=register'),
       headers: _header(),
       body: jsonEncode(<String, String>{
         'username': username,
@@ -282,7 +277,7 @@ class Api {
   Future<http.Response> login(
       {required String username, required String password}) async {
     final response = await http.post(
-      Uri.parse('http://192.168.24.21:8080/vero/index.php?action=login'),
+      Uri.parse('${baseUrl}index.php?action=login'),
       headers: _header(),
       body: jsonEncode(<String, String>{
         'username': username,
