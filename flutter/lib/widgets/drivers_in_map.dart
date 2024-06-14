@@ -43,9 +43,11 @@ class _DriversInMapState extends State<DriversInMap> {
             child: _buildMarker(driver),
           ));
         }
-        mapController.fitCamera(CameraFit.coordinates(
-            padding: const EdgeInsets.all(20.0),
-            coordinates: markers.map((e) => e.point).toList()));
+        if (markers.isNotEmpty) {
+          mapController.fitCamera(CameraFit.coordinates(
+              padding: const EdgeInsets.all(20.0),
+              coordinates: markers.map((e) => e.point).toList()));
+        }
       });
     });
   }
@@ -66,7 +68,7 @@ class _DriversInMapState extends State<DriversInMap> {
     return FlutterMap(
       mapController: mapController,
       options: const MapOptions(
-        initialCenter: LatLng(0.0, 0.0),
+        initialCenter: LatLng(40.0, 22.0),
         initialZoom: 15.0,
         maxZoom: 18.0,
         minZoom: 6.0,
