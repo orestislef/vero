@@ -7,7 +7,10 @@ import 'package:location/location.dart';
 import 'package:vero/communication/models/drivers.dart';
 import 'package:vero/communication/models/trucks.dart';
 import 'package:vero/enums/driver_status.dart';
+import 'package:vero/handlers/truck_handler.dart';
 import 'package:vero/helpers/location_helper.dart';
+
+import '../handlers/driver_handler.dart';
 
 const String baseUrl = 'http://138.2.157.2/vero/';
 
@@ -106,6 +109,7 @@ class Api {
     debugPrint(response.body.toString());
     DriversResponse driversResponse =
         DriversResponse.fromJson(jsonDecode(response.body));
+    DriverHandler.lastResponse = driversResponse;
     return driversResponse;
   }
 
@@ -118,6 +122,7 @@ class Api {
     debugPrint(response.body.toString());
     TrucksResponse trucksResponse =
         TrucksResponse.fromJson(jsonDecode(response.body));
+    TruckHandler.lastResponse = trucksResponse;
     return trucksResponse;
   }
 

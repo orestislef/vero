@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'all_users.dart';
 import 'edit_user.dart';
+import 'login_register.dart';
 
 class UsersOverview extends StatefulWidget {
   const UsersOverview({super.key});
@@ -68,6 +69,19 @@ class _UsersOverviewState extends State<UsersOverview> {
                 setState(() {
                   _currentIndex = 1;
                 });
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('log out'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () {
+                //LoginRegister()
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                        builder: (context) => const LoginRegister()),
+                    (route) => false);
               },
             ),
           ],

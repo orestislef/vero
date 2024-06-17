@@ -28,7 +28,7 @@ class DriverMapView extends StatelessWidget {
         ),
         initialZoom: 15.0,
         maxZoom: 18.0,
-        minZoom: 6.0,
+        minZoom: 8.0,
       ),
       children: [
         TileLayer(

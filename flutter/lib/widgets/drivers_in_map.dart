@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:vero/communication/api.dart';
+import 'package:vero/handlers/driver_handler.dart';
 import 'package:vero/helpers/lat_lng_helper.dart';
 
 import '../communication/models/drivers.dart';
@@ -29,29 +30,35 @@ class _DriversInMapState extends State<DriversInMap> {
 
     mapController = MapController();
     markers = [];
-    Timer.periodic(const Duration(seconds: 5), (_) {
-      Api().getAllDrivers().then((value) {
-        DriversResponse response = value;
-
-        for (var driver in response.drivers) {
-          if (driver.currentLocationJson != null) {
-            markers.add(Marker(
-              width: 100.0,
-              height: 50.0,
-              point: LatLngHelper.jsonToLatLng(driver.currentLocationJson!),
-              child: _buildMarker(driver),
-            ));
-          }
-        }
-        if (markers.isNotEmpty) {
-          mapController.fitCamera(CameraFit.coordinates(
-              padding: const EdgeInsets.all(20.0),
-              coordinates: markers.map((e) => e.point).toList()));
-        }
-      });
-    });
+    DriverHandler.startPeriodicDriverUpdate();
+    // Timer.periodic(const Duration(seconds: 5), (_) {
+    //   Api().getAllDrivers().then((value) {
+    //     DriversResponse response = value;
+    //
+    //     for (var driver in response.drivers) {
+    //       if (driver.currentLocationJson != null) {
+    //         markers.add(Marker(
+    //           width: 100.0,
+    //           height: 50.0,
+    //           point: LatLngHelper.jsonToLatLng(driver.currentLocationJson!),
+    //           child: _buildMarker(driver),
+    //         ));
+    //       }
+    //     }
+    //     if (markers.isNotEmpty) {
+    //       mapController.fitCamera(CameraFit.coordinates(
+    //           padding: const EdgeInsets.all(20.0),
+    //           coordinates: markers.map((e) => e.point).toList()));
+    //     }
+    //   });
+    // });
   }
 
+  @override
+  void dispose() {
+    DriverHandler.stopPeriodicDriverUpdate();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return widget.isFullScreen ? _buildScaffold() : _buildColumn();
@@ -79,7 +86,32 @@ class _DriversInMapState extends State<DriversInMap> {
           minNativeZoom: 6,
           maxNativeZoom: 18,
         ),
-        MarkerLayer(markers: markers),
+        StreamBuilder<DriversResponse>(
+          stream: DriverHandler.getController(),
+          initialData: DriverHandler.lastResponse,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              drivers = snapshot.data!.drivers;
+              for (var driver in drivers) {
+                if (driver.currentLocationJson != null) {
+                  markers = [];
+                  markers.add(Marker(
+                    width: 100.0,
+                    height: 50.0,
+                    point: LatLngHelper.jsonToLatLng(driver.currentLocationJson!),
+                    child: _buildMarker(driver),
+                  ));
+                }
+              }
+              if (markers.isNotEmpty) {
+                mapController.fitCamera(CameraFit.coordinates(
+                    padding: const EdgeInsets.all(20.0),
+                    coordinates: markers.map((e) => e.point).toList()));
+              }
+            }
+            return MarkerLayer(markers: markers);
+          }
+        ),
       ],
     );
   }

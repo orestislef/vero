@@ -1,8 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:vero/communication/api.dart';
 import 'package:vero/communication/models/trucks.dart';
+import 'package:vero/handlers/truck_handler.dart';
 
 class TruckStatistics extends StatefulWidget {
   const TruckStatistics({super.key});
@@ -12,24 +10,33 @@ class TruckStatistics extends StatefulWidget {
 }
 
 class _TruckStatisticsState extends State<TruckStatistics> {
-  List<Truck>? _trucks;
-
   @override
   void initState() {
+    TruckHandler.startPeriodicTruckUpdate();
     super.initState();
-    Timer.periodic(const Duration(seconds: 5), (_) {
-      Api().getAllTrucks().then((value) {
-        TrucksResponse response = value;
-        setState(() {
-          _trucks = response.trucks;
-        });
-      });
-    });
   }
 
   @override
+  void dispose() {
+    TruckHandler.stopPeriodicTruckUpdate();
+    super.dispose();
+  }
+
+  List<Truck>? _trucks;
+
+  @override
   Widget build(BuildContext context) {
-    return _trucks == null ? _buildLoading() : _buildColumn();
+    return StreamBuilder(
+        initialData: TruckHandler.lastResponse,
+        stream: TruckHandler.getController(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            _trucks = snapshot.data!.trucks;
+            return _buildColumn();
+          } else {
+            return _buildLoading();
+          }
+        });
   }
 
   Widget _buildLoading() {
