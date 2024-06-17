@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:vero/communication/api.dart';
 
@@ -35,8 +33,7 @@ class _AllTrucksState extends State<AllTrucks> {
             child: Text('Error: ${snapshot.error}'),
           );
         } else if (snapshot.hasData) {
-          var truckResponse =
-              TrucksResponse.fromJson(jsonDecode(snapshot.data!.body));
+          var truckResponse = snapshot.data as TrucksResponse;
           return truckResponse.trucks.isEmpty
               ? const Center(child: Text('No trucks'))
               : Scrollbar(

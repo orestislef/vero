@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
+import 'package:vero/communication/models/drivers.dart';
+import 'package:vero/communication/models/trucks.dart';
 import 'package:vero/enums/driver_status.dart';
 import 'package:vero/helpers/location_helper.dart';
 
@@ -68,7 +70,7 @@ class Api {
   Future<http.Response> addDriver(
       {required String name, required String phone}) async {
     final response = await http.post(
-      Uri.parse('${baseUrl}vero/index.php?action=add_driver'),
+      Uri.parse('${baseUrl}index.php?action=add_driver'),
       headers: _header(),
       body: jsonEncode(<String, String>{
         'name': name,
@@ -83,7 +85,7 @@ class Api {
   Future<http.Response> addTruck(
       {required String truckName, required String licensePlate}) async {
     final response = await http.post(
-      Uri.parse('${baseUrl}vero/index.php?action=add_truck'),
+      Uri.parse('${baseUrl}index.php?action=add_truck'),
       headers: _header(),
       body: jsonEncode(<String, String>{
         'truck_name': truckName,
@@ -95,24 +97,28 @@ class Api {
     return response;
   }
 
-  Future<http.Response> getAllDrivers() async {
+  Future<DriversResponse> getAllDrivers() async {
     final response = await http.get(
       Uri.parse('${baseUrl}index.php?action=get_all_drivers'),
       headers: _header(),
     );
 
     debugPrint(response.body.toString());
-    return response;
+    DriversResponse driversResponse =
+        DriversResponse.fromJson(jsonDecode(response.body));
+    return driversResponse;
   }
 
-  Future<http.Response> getAllTrucks() async {
+  Future<TrucksResponse> getAllTrucks() async {
     final response = await http.get(
       Uri.parse('${baseUrl}index.php?action=get_all_trucks'),
       headers: _header(),
     );
 
     debugPrint(response.body.toString());
-    return response;
+    TrucksResponse trucksResponse =
+        TrucksResponse.fromJson(jsonDecode(response.body));
+    return trucksResponse;
   }
 
   Future<http.Response> updateTruck({

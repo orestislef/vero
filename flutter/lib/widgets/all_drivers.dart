@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:vero/communication/api.dart';
 import 'package:vero/communication/models/drivers.dart';
@@ -35,8 +33,7 @@ class _AllDriversState extends State<AllDrivers> {
             child: Text('Error: ${snapshot.error}'),
           );
         } else if (snapshot.hasData) {
-          var driversResponse =
-              DriversResponse.fromJson(jsonDecode(snapshot.data!.body));
+          var driversResponse = snapshot.data as DriversResponse;
           return driversResponse.drivers.isEmpty
               ? const Center(child: Text('No drivers'))
               : Scrollbar(
@@ -45,14 +42,16 @@ class _AllDriversState extends State<AllDrivers> {
                     itemCount: driversResponse.drivers.length,
                     itemBuilder: (context, index) {
                       bool hasLocation =
-                          driversResponse.drivers[index].currentLocationJson != null &&
-                              driversResponse.drivers[index].currentLocationJson!
-                                  .isNotEmpty;
+                          driversResponse.drivers[index].currentLocationJson !=
+                                  null &&
+                              driversResponse.drivers[index]
+                                  .currentLocationJson!.isNotEmpty;
                       return ListTile(
                         leading: Container(
                             decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: _getColor(driversResponse.drivers[index])),
+                                color:
+                                    _getColor(driversResponse.drivers[index])),
                             child: Padding(
                               padding: const EdgeInsets.all(10.0),
                               child: Text(
@@ -67,14 +66,16 @@ class _AllDriversState extends State<AllDrivers> {
                             : hasLocation
                                 ? IconButton(
                                     onPressed: () {
-                                      _onClickedOnMap(driversResponse.drivers[index]);
+                                      _onClickedOnMap(
+                                          driversResponse.drivers[index]);
                                     },
                                     icon: const Icon(Icons.map_outlined))
                                 : null,
                         title: Text(driversResponse.drivers[index].name),
                         subtitle: Text(driversResponse.drivers[index].phone),
                         onTap: widget.onTap != null
-                            ? () => widget.onTap!(driversResponse.drivers[index])
+                            ? () =>
+                                widget.onTap!(driversResponse.drivers[index])
                             : null,
                       );
                     },
