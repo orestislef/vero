@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -32,16 +31,17 @@ class _DriversInMapState extends State<DriversInMap> {
     markers = [];
     Timer.periodic(const Duration(seconds: 5), (_) {
       Api().getAllDrivers().then((value) {
-        DriversResponse response =
-            DriversResponse.fromJson(jsonDecode(value.body));
+        DriversResponse response = value;
 
         for (var driver in response.drivers) {
-          markers.add(Marker(
-            width: 100.0,
-            height: 50.0,
-            point: LatLngHelper.jsonToLatLng(driver.currentLocationJson!),
-            child: _buildMarker(driver),
-          ));
+          if (driver.currentLocationJson != null) {
+            markers.add(Marker(
+              width: 100.0,
+              height: 50.0,
+              point: LatLngHelper.jsonToLatLng(driver.currentLocationJson!),
+              child: _buildMarker(driver),
+            ));
+          }
         }
         if (markers.isNotEmpty) {
           mapController.fitCamera(CameraFit.coordinates(

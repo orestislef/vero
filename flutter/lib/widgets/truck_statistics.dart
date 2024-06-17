@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:vero/communication/api.dart';
@@ -20,8 +19,7 @@ class _TruckStatisticsState extends State<TruckStatistics> {
     super.initState();
     Timer.periodic(const Duration(seconds: 5), (_) {
       Api().getAllTrucks().then((value) {
-        TrucksResponse response =
-            TrucksResponse.fromJson(jsonDecode(value.body));
+        TrucksResponse response = value;
         setState(() {
           _trucks = response.trucks;
         });
