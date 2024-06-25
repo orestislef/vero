@@ -12,7 +12,7 @@ import 'package:vero/helpers/location_helper.dart';
 
 import '../handlers/driver_handler.dart';
 
-const String baseUrl = 'http://138.2.157.2/vero/';
+const String baseUrl = 'http://144.24.189.255/vero/';
 
 class Api {
   Api._();

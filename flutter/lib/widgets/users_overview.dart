@@ -77,7 +77,6 @@ class _UsersOverviewState extends State<UsersOverview> {
               title: const Text('log out'),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
-                //LoginRegister()
                 Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(
                         builder: (context) => const LoginRegister()),
