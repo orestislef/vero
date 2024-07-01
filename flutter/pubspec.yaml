@@ -12,11 +12,11 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.8
   http: ^1.2.1
-  location: ^6.0.2
+  location: ^7.0.0
   latlong2: ^0.9.1
   geocoding: ^3.0.0
   custom_navigation_bar: ^0.8.2
-  flutter_map: ^7.0.0
+  flutter_map: ^7.0.1
   flutter_map_location_marker: ^9.0.0
 
 dev_dependencies:
